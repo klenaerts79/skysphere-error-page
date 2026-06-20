@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkySphere - Technische Problemen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .sky {
+            color: #FFFFFF;
+        }
+
+        .sphere {
+            color: #FEDD58;
+        }
+
+        /* Sphere Container with two S's */
+        .sphere-container {
+            margin: 40px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            gap: 0;
+        }
+
+        /* S Letters */
+        .s-letter {
+            font-size: 120px;
+            font-weight: 900;
+            letter-spacing: -10px;
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .s-white {
+            color: #FFFFFF;
+        }
+
+        .s-yellow {
+            color: #FEDD58;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-25px);
+            }
+        }
+
+        /* Glow effect */
+        .s-white {
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+        }
+
+        .s-yellow {
+            filter: drop-shadow(0 0 30px rgba(254, 221, 88, 0.6));
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: #FFFFFF;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .status-code {
+            font-size: 18px;
+            color: #FEDD58;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            font-size: 18px;
+            color: #CCCCCC;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .message {
+            background-color: rgba(254, 221, 88, 0.1);
+            border-left: 4px solid #FEDD58;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        .message p {
+            margin: 0;
+            color: #FFFFFF;
+            font-size: 16px;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #888888;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+        }
+
+        .contact-info a {
+            color: #FEDD58;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <span class="sky">Sky</span><span class="sphere">Sphere</span>
+        </div>
+
+        <div class="sphere-container">
+            <div class="s-letter s-white">S</div>
+            <div class="s-letter s-yellow">S</div>
+        </div>
+
+        <div class="status-code">503 Service Unavailable</div>
+
+        <h1>Technische Moeilijkheden</h1>
+
+        <p>We werken hard om het probleem op te lossen. We zijn zo snel mogelijk weer terug!</p>
+
+        <div class="message">
+            <p>Onze servers ondergaan momenteel onderhoud. Probeer het later opnieuw.</p>
+        </div>
+
+        <div class="footer">
+            <p>SkySphere We'll be back soon</p>
+            <div class="contact-info">
+                <p>Vragen? <a href="mailto:support@skysphere.nl">Neem contact op</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
