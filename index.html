@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkySphere — Technische moeilijkheden</title>
+  <title>SkySphere Technische moeilijkheden</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
@@ -196,6 +196,36 @@
     .card-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 3px; }
     .card-text  { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.55; }
 
+    /* ── Countdown timer ── */
+    .timer-wrap {
+      display: none;
+      margin-bottom: 1.5rem;
+    }
+    .timer-circle {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 0.6rem;
+    }
+    .timer-svg { width: 80px; height: 80px; transform: rotate(-90deg); }
+    .timer-track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 4; }
+    .timer-progress {
+      fill: none;
+      stroke: #FEDD58;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 201;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+      filter: drop-shadow(0 0 4px rgba(254,221,88,0.6));
+    }
+    .timer-number {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: #fff;
+    }
+    .timer-label { font-size: 12px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
+
     /* ── Footer ── */
     .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 1rem 0 1.4rem; }
     .footer { font-size: 13px; color: rgba(255,255,255,0.28); }
@@ -309,6 +339,18 @@
     </div>
   </div>
 
+  <!-- Visual countdown timer -->
+  <div class="timer-wrap" id="timer-wrap">
+    <div class="timer-circle">
+      <svg class="timer-svg" viewBox="0 0 80 80">
+        <circle class="timer-track" cx="40" cy="40" r="32"/>
+        <circle class="timer-progress" id="timer-ring" cx="40" cy="40" r="32"/>
+      </svg>
+      <div class="timer-number" id="timer-number">30</div>
+    </div>
+    <div class="timer-label" id="timer-label">seconden</div>
+  </div>
+
   <hr class="divider">
   <div class="footer">
     <p id="footer-contact">Vragen of problemen? <a href="mailto:support@skysphere.be">support@skysphere.be</a></p>
@@ -318,6 +360,66 @@
 </div>
 
 <script>
+  /* ── Auto-refresh naar originele subdomein ── */
+  (function() {
+    const referrer = document.referrer;
+    const allowed = ['cloud.skysphere.be', 'minecraft.skysphere.be'];
+    let origin = null;
+
+    if (referrer) {
+      try {
+        const url = new URL(referrer);
+        if (allowed.includes(url.hostname)) {
+          origin = url.origin;
+        }
+      } catch(e) {}
+    }
+
+    // Fallback: kijk naar huidige URL param ?from=
+    if (!origin) {
+      const params = new URLSearchParams(window.location.search);
+      const from = params.get('from');
+      if (from && allowed.includes(from)) {
+        origin = 'https://' + from;
+      }
+    }
+
+    // Timer altijd tonen
+    const TOTAL = 30;
+    let seconds = TOTAL;
+    const circumference = 201;
+
+    const timerWrap   = document.getElementById('timer-wrap');
+    const timerNumber = document.getElementById('timer-number');
+    const timerRing   = document.getElementById('timer-ring');
+
+    if (timerWrap) timerWrap.style.display = 'block';
+
+    function updateTimer() {
+      if (timerNumber) timerNumber.textContent = seconds;
+      if (timerRing) {
+        const offset = circumference * (1 - seconds / TOTAL);
+        timerRing.style.strokeDashoffset = offset;
+      }
+    }
+
+    updateTimer();
+
+    const interval = setInterval(() => {
+      seconds--;
+      updateTimer();
+      if (seconds <= 0) {
+        clearInterval(interval);
+        // Alleen redirecten als we weten waarvandaan
+        if (origin) {
+          window.location.href = origin;
+        } else {
+          window.location.reload();
+        }
+      }
+    }, 1000);
+  })();
+
   /* ── Starfield ── */
   (function() {
     const container = document.getElementById('stars');
@@ -351,7 +453,8 @@
       c1x:"Onze systemen worden bijgewerkt voor betere prestaties en betrouwbaarheid. Probeer het over enkele minuten opnieuw.",
       c2t:"Wat kan je doen?",
       c2x:"Vernieuw de pagina, wis je browsercache, of probeer het later opnieuw.",
-      foot:'Vragen of problemen? <a href="mailto:support@skysphere.be">support@skysphere.be</a>'
+      foot:'Vragen of problemen? <a href="mailto:support@skysphere.be">support@skysphere.be</a>',
+      refreshLabel: "Automatisch opnieuw proberen over", refreshLink: "klik hier om nu terug te gaan", timerLabel: "seconden"
     },
     fr: {
       title: "Difficultés<br>techniques",
@@ -363,7 +466,8 @@
       c1x:"Nos systèmes sont mis à jour pour de meilleures performances. Veuillez réessayer dans quelques minutes.",
       c2t:"Que pouvez-vous faire ?",
       c2x:"Actualisez la page, videz le cache ou réessayez plus tard.",
-      foot:'Des questions ? <a href="mailto:support@skysphere.be">support@skysphere.be</a>'
+      foot:'Des questions ? <a href="mailto:support@skysphere.be">support@skysphere.be</a>',
+      refreshLabel: "Nouvelle tentative automatique dans", refreshLink: "cliquez ici pour revenir maintenant", timerLabel: "secondes"
     },
     de: {
       title: "Technische<br>Schwierigkeiten",
@@ -375,7 +479,8 @@
       c1x:"Unsere Systeme werden für bessere Leistung aktualisiert. Bitte versuchen Sie es in einigen Minuten erneut.",
       c2t:"Was können Sie tun?",
       c2x:"Seite neu laden, Browser-Cache leeren oder später erneut versuchen.",
-      foot:'Fragen? <a href="mailto:support@skysphere.be">support@skysphere.be</a>'
+      foot:'Fragen? <a href="mailto:support@skysphere.be">support@skysphere.be</a>',
+      refreshLabel: "Automatischer Neuversuch in", refreshLink: "Hier klicken um jetzt zurückzukehren", timerLabel: "Sekunden"
     },
     es: {
       title: "Dificultades<br>técnicas",
@@ -387,7 +492,8 @@
       c1x:"Nuestros sistemas se actualizan para mejorar el rendimiento. Por favor, inténtelo de nuevo en unos minutos.",
       c2t:"¿Qué puedes hacer?",
       c2x:"Recarga la página, borra la caché o inténtalo más tarde.",
-      foot:'¿Preguntas? <a href="mailto:support@skysphere.be">support@skysphere.be</a>'
+      foot:'¿Preguntas? <a href="mailto:support@skysphere.be">support@skysphere.be</a>',
+      refreshLabel: "Reintento automático en", refreshLink: "haz clic aquí para volver ahora", timerLabel: "segundos"
     },
     en: {
       title: "Technical<br>Difficulties",
@@ -399,7 +505,8 @@
       c1x:"Our systems are being updated for better performance and reliability. Please try again in a few minutes.",
       c2t:"What can you do?",
       c2x:"Refresh the page, clear your browser cache, or try again later.",
-      foot:'Questions? <a href="mailto:support@skysphere.be">support@skysphere.be</a>'
+      foot:'Questions? <a href="mailto:support@skysphere.be">support@skysphere.be</a>',
+      refreshLabel: "Automatically retrying in", refreshLink: "click here to go back now", timerLabel: "seconds"
     }
   };
 
@@ -422,8 +529,9 @@
     document.getElementById('card2-title').textContent= t.c2t;
     document.getElementById('card2-text').textContent = t.c2x;
     document.getElementById('footer-contact').innerHTML = t.foot;
+    const tl = document.getElementById('timer-label');
+    if (tl) tl.textContent = t.timerLabel || 'seconden';
   })();
 </script>
 </body>
 </html>
-
